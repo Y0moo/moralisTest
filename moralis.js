@@ -4446,7 +4446,7 @@ var _createClass2 = _interopRequireDefault(_dereq_("@babel/runtime-corejs3/helpe
 
 var _asyncToGenerator2 = _interopRequireDefault(_dereq_("@babel/runtime-corejs3/helpers/asyncToGenerator"));
 
-var _web2 = _interopRequireDefault(_dereq_("web3"));
+var _web = _interopRequireDefault(_dereq_("web3"));
 /* global window */
 
 
@@ -4457,20 +4457,20 @@ function getWeb3FromBrowser() {
 }
 
 function _getWeb3FromBrowser() {
-  _getWeb3FromBrowser = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3(providerName) {
+  _getWeb3FromBrowser = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
     var _window$web;
 
-    var MWeb3, provider, _window, ethereum, BinanceChain, web3, _web;
+    var MWeb3, provider, _window, ethereum, web3;
 
     return _regenerator.default.wrap(function (_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            MWeb3 = typeof _web2.default === 'function' ? _web2.default : window.Web3;
+            MWeb3 = typeof _web.default === 'function' ? _web.default : window.Web3;
             provider = (_window$web = window.web3) === null || _window$web === void 0 ? void 0 : _window$web.currentProvider;
-            _window = window, ethereum = _window.ethereum, BinanceChain = _window.BinanceChain;
+            _window = window, ethereum = _window.ethereum;
 
-            if (!(providerName === 'trust' && provider !== null && provider !== void 0 && provider.isTrust)) {
+            if (!(provider !== null && provider !== void 0 && provider.isTrust)) {
               _context3.next = 5;
               break;
             }
@@ -4478,7 +4478,7 @@ function _getWeb3FromBrowser() {
             return _context3.abrupt("return", new MWeb3(provider));
 
           case 5:
-            if (!(providerName === 'metamask' && ethereum)) {
+            if (!ethereum) {
               _context3.next = 10;
               break;
             }
@@ -4486,39 +4486,24 @@ function _getWeb3FromBrowser() {
             web3 = new MWeb3(ethereum);
             _context3.next = 9;
             return ethereum.request({
-              method: 'eth_requestAccounts'
+              method: 'eth_accounts'
             });
 
           case 9:
             return _context3.abrupt("return", web3);
 
           case 10:
-            if (!(providerName === 'binance' && BinanceChain)) {
-              _context3.next = 15;
-              break;
-            }
-
-            _web = new MWeb3(BinanceChain);
-            _context3.next = 14;
-            return BinanceChain.request({
-              method: 'eth_requestAccounts'
-            });
-
-          case 14:
-            return _context3.abrupt("return", _web);
-
-          case 15:
             if (!provider) {
-              _context3.next = 17;
+              _context3.next = 12;
               break;
             }
 
             return _context3.abrupt("return", new MWeb3(provider));
 
-          case 17:
+          case 12:
             throw new Error(WARNING);
 
-          case 18:
+          case 13:
           case "end":
             return _context3.stop();
         }
@@ -4542,24 +4527,19 @@ var MoralisInjectedProvider = /*#__PURE__*/function () {
     key: "activate",
     value: function () {
       var _activate = (0, _asyncToGenerator2.default)( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-        var options,
-            provider,
-            _args = arguments;
         return _regenerator.default.wrap(function (_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                options = _args.length > 0 && _args[0] !== undefined ? _args[0] : {};
-                provider = options.provider;
-                _context.next = 4;
-                return getWeb3FromBrowser(provider);
+                _context.next = 2;
+                return getWeb3FromBrowser();
 
-              case 4:
+              case 2:
                 this.web3 = _context.sent;
                 this.isActivated = true;
                 return _context.abrupt("return", this.web3);
 
-              case 7:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -5174,65 +5154,53 @@ var MoralisWeb3 = /*#__PURE__*/function () {
                 throw new Error('Address not found');
 
               case 26:
-                _context4.t0 = web3.currentProvider;
-                _context4.next = 29;
-                return web3.eth.getAccounts();
+                _context4.next = 28;
+                return web3.eth.personal.sign(data, ethAddress, '');
 
-              case 29:
-                _context4.t1 = _context4.sent[0];
-                _context4.t2 = data;
-                _context4.t3 = [_context4.t1, _context4.t2];
-                _context4.t4 = {
-                  method: 'personal_sign',
-                  params: _context4.t3
-                };
-                _context4.next = 35;
-                return _context4.t0.request.call(_context4.t0, _context4.t4);
-
-              case 35:
+              case 28:
                 signature = _context4.sent;
 
                 if (signature) {
-                  _context4.next = 38;
+                  _context4.next = 31;
                   break;
                 }
 
                 throw new Error('Data not signed');
 
-              case 38:
+              case 31:
                 authData = {
                   id: ethAddress,
                   signature: signature,
                   data: data
                 };
-                _context4.next = 41;
+                _context4.next = 34;
                 return _ParseUser.default.logInWith('moralisEth', {
                   authData: authData
                 });
 
-              case 41:
+              case 34:
                 user = _context4.sent;
-                _context4.next = 44;
+                _context4.next = 37;
                 return user.setACL(new _ParseACL.default(user));
 
-              case 44:
+              case 37:
                 if (user) {
-                  _context4.next = 46;
+                  _context4.next = 39;
                   break;
                 }
 
                 throw new Error('Could not get user');
 
-              case 46:
+              case 39:
                 user.set('accounts', uniq((0, _concat.default)(_context3 = []).call(_context3, accountsLower, (_user$get = user.get('accounts')) !== null && _user$get !== void 0 ? _user$get : [])));
                 user.set('ethAddress', ethAddress);
-                _context4.next = 50;
+                _context4.next = 43;
                 return user.save(null, options);
 
-              case 50:
+              case 43:
                 return _context4.abrupt("return", user);
 
-              case 51:
+              case 44:
               case "end":
                 return _context4.stop();
             }
