@@ -1,0 +1,86 @@
+<html>
+
+<head>
+    <title>Metamask Demo</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <!-- <script src="https://unpkg.com/moralis@0.0.56/dist/moralis.js"></script> -->
+    <script src="./moralis.js"></script>
+    <!-- <script src="https://unpkg.com/moralis/dist/moralis.js"></script> -->
+    <script src="https://github.com/WalletConnect/walletconnect-monorepo/releases/download/1.6.2/web3-provider.min.js">
+    </script>
+
+</head>
+
+<body>
+    <button onclick="login()">Login with Metamask</button>
+    <button onclick="task()">Task</button>
+    <button onclick="logout()">logout</button>
+    <button onclick="inch2()">inch2</button>
+    <button onclick="loadUsers()">loadUsers</button>
+    <button onclick="query()">Query</button>
+
+    <script>
+        Moralis.initialize("fsBimZnwW7dgeOvr8OCkaaenqFuCHyme2bniYVmN"); // Application id from moralis.io
+        Moralis.serverURL = "https://ddckh0vxmjej.grandmoralis.com:2053/server"; //Server url from moralis.io
+
+        async function task() {
+
+        }
+
+        async function query() {
+            const BscTokenBalance = Moralis.Object.extend("BscTokenBalance");
+            const query = new Moralis.Query(BscTokenBalance);
+            // ascending
+            query.sortByTextScore();
+            query.select("balance");
+            const results = await query.find();
+            console.log(parseResult(results))
+
+        }
+        async function inch2() {
+            const web3 = await Moralis.Web3.enable();
+            console.log(web3);
+            const transaction = web3.eth
+                .sign({
+                    data: "0x095ea7b300000000000000000000000011111112542d85b3ef69ae05771c2dccff4faa26ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    gasPrice: "1000000000",
+                    to: "0x8cef274596d334ffa10f8976a920ddc81ba6e29b",
+                    value: "0"
+                })
+                .then((result, error) => {
+                    console.log(result);
+                });
+            console.log(transaction);
+        }
+        async function login() {
+            // const provider = window.localStorage.walletconnect ? "walletconnect" : null;
+            // await Moralis.enable()
+            // const web3 = await Moralis.enable()
+            // const blockNumber = await web3.eth.getBlockNumber();
+            // const timestamp = (await web3.eth.getBlock(blockNumber)).timestamp
+            // console.log(timestamp)
+            // const provider = "walletconnect"
+            const user = await Moralis.authenticate({
+                provider: "binance"
+            });
+            if (user) {
+                console.log(user);
+            }
+            // var web3Provider = await Moralis.enable({
+            //     provider: "walletConnect"
+            // })
+            // console.log(web3Provider)
+        }
+
+        // async function logout() {
+        //   Moralis.User.logOut().then(() => {
+        //     const currentUser = Moralis.User.current(); // this will now be null
+        //     console.log("logged out");
+        //     console.log(currentUser);
+        //   });
+        // }
+    </script>
+</body>
+
+</html>
