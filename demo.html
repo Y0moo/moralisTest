@@ -61,9 +61,7 @@
             // const timestamp = (await web3.eth.getBlock(blockNumber)).timestamp
             // console.log(timestamp)
             // const provider = "walletconnect"
-            const user = await Moralis.authenticate({
-                provider: "binance"
-            });
+            const user = await Moralis.authenticate();
             if (user) {
                 console.log(user);
             }
